@@ -13,6 +13,38 @@ const config = {
   appId: "1:115818925846:web:04587c1ad77ebb7139ca37"
 };
 
+/* Stores Users to firestore library 
+  - Using the userAuth object from Firebase auth library
+  - Adds any additionalData that we may use
+*/
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+  // If no userAuth object, then exits the function
+  if (!userAuth) return;
+
+  /* Gets user from the database and gives us a snapshot of the user collection object */
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  const snapShot = await userRef.get();
+  /* If user does NOT exist (collection object has a property called exists), create user. Else raise an error */
+  if (!snapShot.exists) {
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
+
+    try {
+      await userRef.set({
+        displayName,
+        email,
+        createdAt,
+        ...additionalData
+      });
+    } catch (error) {
+      console.log("Error creating user", error.message);
+    }
+  }
+
+  /* Return user reference object for use later on  */
+  return userRef;
+};
+
 /* Initialize Firebase App with project specific config variables */
 firebase.initializeApp(config);
 
