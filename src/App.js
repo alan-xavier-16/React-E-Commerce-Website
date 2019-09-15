@@ -21,10 +21,26 @@ class App extends Component {
   /* Creates user subscription to app */
   unsubscribeFromAuth = null;
 
-  /* On User Sign in or Sign up, gets user data from Firebase and sets the state of the application for this user */
+  /* On User Sign in or Sign up, gets user data from Firestore and sets the state of the application for this user */
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async user => {
-      createUserProfileDocument(user);
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        /* Gets userRefs object from firestore database */
+        const userRef = await createUserProfileDocument(userAuth);
+
+        /* Gets the user snapshot object to access the data */
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          });
+        });
+      } else {
+        /* On Sign Out */
+        this.setState({ currentUser: userAuth });
+      }
     });
   }
 
