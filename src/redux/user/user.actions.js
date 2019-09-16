@@ -4,5 +4,5 @@ Functions that returns objects. Each object is in the correct format that the ac
 
 export const setCurrentUser = user => ({
   type: "SET_CURRENT_USER",
-  payloadd: user
+  payload: user
 });
