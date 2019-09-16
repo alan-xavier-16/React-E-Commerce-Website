@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 import { auth } from "../../firebase/firebase.utils";
 
@@ -33,4 +34,14 @@ const Header = ({ currentUser }) => {
   );
 };
 
-export default Header;
+/* 
+Returns an object where the returned value is based on a key, value relationship.
+  - 'state' is the rootReducer.
+  - The 'key' is the state we want access to.
+  - The 'value' is the returned value from our root reducer.
+*/
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser
+});
+
+export default connect()(Header);
