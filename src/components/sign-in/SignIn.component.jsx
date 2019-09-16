@@ -17,7 +17,7 @@ class SignIn extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-
+    /* Sign in user with Firebase Authentication */
     const { email, password } = this.state;
     try {
       await auth.signInWithEmailAndPassword(email, password);
