@@ -4,11 +4,12 @@ import { connect } from "react-redux";
 
 import { auth } from "../../firebase/firebase.utils";
 import CartIcon from "../cart-icon/CartIcon.component";
+import CartDropdown from "../cart-dropdown/CartDropdown.component";
 
 import "./Header.styles.scss";
 import { ReactComponent as Logo } from "../../assets/crown.svg";
 
-const Header = ({ currentUser }) => {
+const Header = ({ currentUser, hidden }) => {
   return (
     <div className="header">
       <Link to="/" className="logo-container">
@@ -32,6 +33,7 @@ const Header = ({ currentUser }) => {
         )}
         <CartIcon />
       </div>
+      {hidden ? null : <CartDropdown />}
     </div>
   );
 };
@@ -42,8 +44,9 @@ Returns an object where the returned value is based on a key, value relationship
   - The 'key' is the state we want access to.
   - The 'value' is the returned value from our root reducer.
 */
-const mapStateToProps = state => ({
-  currentUser: state.user.currentUser
+const mapStateToProps = ({ user: { currentUser }, cart: { hidden } }) => ({
+  currentUser,
+  hidden
 });
 
 export default connect(mapStateToProps)(Header);
