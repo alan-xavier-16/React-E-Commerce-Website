@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
 import HomePage from "./pages/homepage/HomePage.component";
@@ -53,13 +53,29 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route exact path="/shop" component={Shop} />
-          <Route exact path="/signin" component={SignInAndSignOutPage} />
+          <Route
+            exact
+            path="/signin"
+            render={() =>
+              this.props.currentUser ? (
+                <Redirect to="/" />
+              ) : (
+                <SignInAndSignOutPage />
+              )
+            }
+          />
         </Switch>
       </div>
     );
   }
 }
 
+/*
+Returns a user object from the root reducer.
+*/
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser
+});
 /*
 A function that has a 'dispatch' property and returns an object where the prop name relates to the action we are trying to dispatch.
   - dispatch is a way for Redux to know that the object passed, is an action which is passed to ALL reducers.
@@ -69,6 +85,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(App);
