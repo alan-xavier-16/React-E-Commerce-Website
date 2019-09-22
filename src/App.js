@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 
 import HomePage from "./pages/homepage/HomePage.component";
 import Shop from "./pages/shop/Shop.component";
@@ -10,6 +11,7 @@ import SignInAndSignOutPage from "./pages/sign-in-and-sign-up/SignInAndSignOut.c
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
 import { setCurrentUser } from "./redux/user/user.actions";
+import { selectCurrentUser } from "./redux/user/user.selectors";
 
 import "./App.css";
 
@@ -73,8 +75,8 @@ class App extends Component {
 /*
 Returns a user object from the root reducer.
 */
-const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
 });
 /*
 A function that has a 'dispatch' property and returns an object where the prop name relates to the action we are trying to dispatch.
