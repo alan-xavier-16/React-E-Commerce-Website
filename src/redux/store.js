@@ -5,6 +5,8 @@ Represents the ENTIRE state of the application.
 */
 
 import { createStore, applyMiddleware } from "redux";
+/* Allows browser to cache store based on our configuration */
+import { persistStore } from "redux-persist";
 import logger from "redux-logger";
 
 import rootReducer from "./root-reducer";
@@ -19,4 +21,7 @@ createStore accepts two inputs
 */
 const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
-export default store;
+/* Persisted version of store */
+const persistor = persistStore(store);
+
+export { store, persistor };
