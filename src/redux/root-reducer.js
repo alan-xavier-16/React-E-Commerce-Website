@@ -10,6 +10,7 @@ import storage from "redux-persist/lib/storage"; //localStorage for web
 
 import userReducer from "./user/user.reducer";
 import cartReducer from "./cart/cart.reducer";
+import directoryReducer from "./directory/directory.reducer";
 
 /* 
 Redux-Persist configuration - the JSON object we want redux-persist to use. It needs:
@@ -25,7 +26,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userReducer,
-  cart: cartReducer
+  cart: cartReducer,
+  directory: directoryReducer
 });
 
 /* rootReducer has persistence capabilities */
