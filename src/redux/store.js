@@ -12,7 +12,12 @@ import logger from "redux-logger";
 import rootReducer from "./root-reducer";
 
 /* Configures all Middlewares as an array */
-const middlewares = [logger];
+const middlewares = [];
+
+/* Applying following middlewares ONLY in development */
+if (process.env.NODE_ENV === "development") {
+  middlewares.push(logger);
+}
 
 /* 
 createStore accepts two inputs
