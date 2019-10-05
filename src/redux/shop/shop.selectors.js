@@ -13,12 +13,13 @@ Then it maps over the keys, and returns the array of collections
 */
 export const selectCollectionsForPreview = createSelector(
   [selectCollections],
-  collections => Object.keys(collections).map(key => collections[key])
+  collections =>
+    collections ? Object.keys(collections).map(key => collections[key]) : []
 );
 
 /* Function maps over the collections based on the url parameter (e.g. /hats) and return the matching collection, i.e. hats */
 export const selectCollection = collectionUrlParam =>
   createSelector(
     [selectCollections],
-    collections => collections[collectionUrlParam]
+    collections => (collections ? collections[collectionUrlParam] : null)
   );
