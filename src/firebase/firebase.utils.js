@@ -13,6 +13,9 @@ const config = {
   appId: "1:115818925846:web:04587c1ad77ebb7139ca37"
 };
 
+/* Initialize Firebase App with project specific config variables */
+firebase.initializeApp(config);
+
 /* Stores Users to firestore library 
   - Using the userAuth object from Firebase auth library
   - Adds any additionalData that we may use
@@ -45,8 +48,29 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   return userRef;
 };
 
-/* Initialize Firebase App with project specific config variables */
-firebase.initializeApp(config);
+/*
+Stores SHOP DATA to Database
+*/
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd
+) => {
+  /* Creates collection where the name of the collection is the 'key' */
+  const collectionRef = firestore.collection(collectionKey);
+  console.log(collectionRef);
+
+  /* Set data to database */
+  const batch = firestore.batch();
+  objectsToAdd.forEach(obj => {
+    /* Creates a new Document reference with unique ID */
+    const newDocRef = collectionRef.doc();
+    /* Set new Document reference with the object passed */
+    batch.set(newDocRef, obj);
+  });
+
+  /* Executes batch call */
+  return await batch.commit();
+};
 
 /* Configure Firebase App with Authentication and Database */
 export const auth = firebase.auth();

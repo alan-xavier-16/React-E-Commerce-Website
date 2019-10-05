@@ -9,10 +9,15 @@ import SignInAndSignOutPage from "./pages/sign-in-and-sign-up/SignInAndSignOut.c
 import Checkout from "./pages/checkout/Checkout.component";
 import Header from "./components/header/Header.component";
 
-import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import {
+  auth,
+  createUserProfileDocument,
+  addCollectionAndDocuments
+} from "./firebase/firebase.utils";
 
 import { setCurrentUser } from "./redux/user/user.actions";
 import { selectCurrentUser } from "./redux/user/user.selectors";
+import { selectCollectionsForPreview } from "./redux/shop/shop.selectors";
 
 import "./App.css";
 
@@ -23,7 +28,7 @@ class App extends Component {
 
   /* On User Sign in or Sign up, gets user data from Firestore and sets the state of the application for this user */
   componentDidMount() {
-    const { setCurrentUser } = this.props;
+    const { setCurrentUser, collectionsArray } = this.props;
 
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
@@ -40,6 +45,11 @@ class App extends Component {
       } else {
         /* On Sign Out */
         setCurrentUser(userAuth);
+        /* Creates new collection with name as 'key' and documents are the 'array' with the object we want */
+        addCollectionAndDocuments(
+          "collections",
+          collectionsArray.map(({ title, items }) => ({ title, items }))
+        );
       }
     });
   }
@@ -79,7 +89,8 @@ class App extends Component {
 Returns a user object from the root reducer.
 */
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
+  collectionsArray: selectCollectionsForPreview
 });
 /*
 A function that has a 'dispatch' property and returns an object where the prop name relates to the action we are trying to dispatch.
