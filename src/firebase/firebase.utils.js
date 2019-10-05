@@ -72,6 +72,28 @@ export const addCollectionAndDocuments = async (
   return await batch.commit();
 };
 
+/*
+Formats the Shop Data collection obtained from Firebase to our needs
+*/
+export const convertCollectionsSnapshotToMap = collections => {
+  /* Formats the data from Firebase to an array with the appropriate 'keys' */
+  const transformedCollection = collections.docs.map(doc => {
+    const { title, items } = doc.data();
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items
+    };
+  });
+
+  /* Creates an object map from the array */
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection;
+    return accumulator;
+  }, {});
+};
+
 /* Configure Firebase App with Authentication and Database */
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
