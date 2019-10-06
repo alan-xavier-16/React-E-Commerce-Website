@@ -1,14 +1,46 @@
 /**
-- takeEvery listens for EVERY action of a specific TYPE passed into it
+- takeEvery is the effect that listens for EVERY action of a specific TYPE passed into it
+- call is the effect inside the generator function that invokes the method
+- put is the effect for creating actions, i.e. dispatch
  */
 
-import { takeEvery } from "redux-saga/effects";
+import { takeEvery, call, put } from "redux-saga/effects";
+
+import {
+  firestore,
+  convertCollectionsSnapshotToMap
+} from "../../firebase/firebase.utils";
+
+import {
+  fetchCollectionsSuccess,
+  fetchCollectionsFailure
+} from "./shop.actions";
 
 import ShopActionTypes from "./shop.types";
 
 /* Creating a Saga, i.e. A Generator Function */
 export function* fetchCollectionAsync() {
-  yield console.log("Working");
+  try {
+    const collectionRef = firestore.collection("collections"); //'collections' is the name of collection in Firestore Database
+    const snapshot = yield collectionRef.get();
+    const collectionsMap = yield call(
+      convertCollectionsSnapshotToMap,
+      snapshot
+    );
+
+    yield put(fetchCollectionsSuccess(collectionsMap));
+  } catch (error) {
+    yield put(fetchCollectionsFailure(error.message));
+  }
+
+  // Async version using redux-thunk
+  // collectionRef
+  //   .get()
+  //   .then(snapshot => {
+  //     const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+  //     dispatch(fetchCollectionsSuccess(collectionsMap));
+  //   })
+  //   .catch(error => dispatch(fetchCollectionsFailure(error.message)));
 }
 
 export function* fetchCollectionStart() {
