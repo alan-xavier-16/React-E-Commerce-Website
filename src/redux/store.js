@@ -8,11 +8,12 @@ import { createStore, applyMiddleware } from "redux";
 /* Allows browser to cache store based on our configuration */
 import { persistStore } from "redux-persist";
 import logger from "redux-logger";
+import thunk from "redux-thunk";
 
 import rootReducer from "./root-reducer";
 
 /* Configures all Middlewares as an array */
-const middlewares = [];
+const middlewares = [thunk];
 
 /* Applying following middlewares ONLY in development */
 if (process.env.NODE_ENV === "development") {
