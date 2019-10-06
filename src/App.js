@@ -25,23 +25,23 @@ class App extends Component {
   componentDidMount() {
     const { setCurrentUser } = this.props;
 
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      if (userAuth) {
-        /* Gets userRefs object from firestore database */
-        const userRef = await createUserProfileDocument(userAuth);
+    // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+    //   if (userAuth) {
+    //     /* Gets userRefs object from firestore database */
+    //     const userRef = await createUserProfileDocument(userAuth);
 
-        /* Gets the user snapshot object to access the data */
-        userRef.onSnapshot(snapShot => {
-          setCurrentUser({
-            id: snapShot.id,
-            ...snapShot.data()
-          });
-        });
-      } else {
-        /* On Sign Out */
-        setCurrentUser(userAuth);
-      }
-    });
+    //     /* Gets the user snapshot object to access the data */
+    //     userRef.onSnapshot(snapShot => {
+    //       setCurrentUser({
+    //         id: snapShot.id,
+    //         ...snapShot.data()
+    //       });
+    //     });
+    //   } else {
+    //     /* On Sign Out */
+    //     setCurrentUser(userAuth);
+    //   }
+    // });
   }
 
   /* Clear subscription */
