@@ -4,8 +4,10 @@ import { connect } from "react-redux";
 import FormInput from "../form-input/FormInput.component";
 import CustomButton from "../custom-button/CustomButton.component";
 
-import { auth, signInWithGoogle } from "../../firebase/firebase.utils";
-import { googleSignInStart } from "../../redux/user/user.actions";
+import {
+  googleSignInStart,
+  emailSignInStart
+} from "../../redux/user/user.actions";
 
 import "./SignIn.styles.scss";
 
@@ -22,12 +24,9 @@ class SignIn extends Component {
     e.preventDefault();
     /* Sign in user with Firebase Authentication */
     const { email, password } = this.state;
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-      this.setState({ email: "", password: "" });
-    } catch (error) {
-      console.error(error);
-    }
+    const { emailSignInStart } = this.props;
+
+    emailSignInStart(email, password);
   };
 
   handleChange = e => {
@@ -37,7 +36,7 @@ class SignIn extends Component {
 
   render() {
     const { email, password } = this.state;
-    const { googleSignInStart } = this.props;
+    const { googleSignInStart, emailSignInStart } = this.props;
     return (
       <div className="sign-in">
         <h2>I already have an account</h2>
@@ -79,7 +78,9 @@ class SignIn extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  googleSignInStart: () => dispatch(googleSignInStart())
+  googleSignInStart: () => dispatch(googleSignInStart()),
+  emailSignInStart: (email, password) =>
+    dispatch(emailSignInStart({ email, password }))
 });
 
 export default connect(
