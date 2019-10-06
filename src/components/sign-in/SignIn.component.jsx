@@ -36,7 +36,7 @@ class SignIn extends Component {
 
   render() {
     const { email, password } = this.state;
-    const { googleSignInStart, emailSignInStart } = this.props;
+    const { googleSignInStart } = this.props;
     return (
       <div className="sign-in">
         <h2>I already have an account</h2>
