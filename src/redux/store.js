@@ -10,9 +10,8 @@ import { persistStore } from "redux-persist";
 import logger from "redux-logger";
 import createSagaMiddleware from "redux-saga";
 
-import { fetchCollectionStart } from "./shop/shop.sagas";
-
 import rootReducer from "./root-reducer";
+import rootSaga from "./root-saga";
 
 /*Sagas used to handle side-effects such as asynchronous calls and impure functions */
 const sagaMiddleware = createSagaMiddleware();
@@ -33,7 +32,7 @@ createStore accepts two inputs
 const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
 /* Use saga middleware to run each individual saga */
-sagaMiddleware.run(fetchCollectionStart);
+sagaMiddleware.run(rootSaga);
 
 /* Persisted version of store */
 const persistor = persistStore(store);

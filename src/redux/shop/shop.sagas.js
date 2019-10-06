@@ -2,9 +2,10 @@
 - takeEvery is the effect that listens for EVERY action of a specific TYPE passed into it
 - call is the effect inside the generator function that invokes the method
 - put is the effect for creating actions, i.e. dispatch
+- takeLatest is the effect that issues the function ONCE, i.e. the last one to be executed
  */
 
-import { takeEvery, call, put } from "redux-saga/effects";
+import { takeLatest, call, put } from "redux-saga/effects";
 
 import {
   firestore,
@@ -44,7 +45,7 @@ export function* fetchCollectionAsync() {
 }
 
 export function* fetchCollectionStart() {
-  yield takeEvery(
+  yield takeLatest(
     ShopActionTypes.FETCH_COLLECTIONS_START,
     fetchCollectionAsync
   );
