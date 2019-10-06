@@ -33,11 +33,25 @@ class Shop extends Component {
     const collectionRef = firestore.collection("collections"); //'collections' is the name of collection in Firestore Database
 
     /* Send snapshot representing the collection objects array when run */
-    this.unsubscribeFromSnapshot = collectionRef.onSnapshot(async snapshot => {
+    /*     this.unsubscribeFromSnapshot = collectionRef.onSnapshot(async snapshot => {
       const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
       updateCollections(collectionsMap);
       this.setState({ loading: false });
     });
+
+    /* Use API calls with PROMISES instead of Firebase 'onSnapshot' Observable methods */
+    collectionRef.get().then(snapshot => {
+      const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+      updateCollections(collectionsMap);
+      this.setState({ loading: false });
+    });
+
+    /* Using the fetch API to fetch data from Firebase */
+    /*     fetch(
+      "https://firestore.googleapis.com/v1/projects/crwn-db-ff125/databases/(default)/documents/collections"
+    )
+      .then(response => response.json())
+      .then(collections => console.log(collections)); */
   }
 
   render() {
