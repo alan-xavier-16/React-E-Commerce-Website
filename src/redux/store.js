@@ -8,12 +8,17 @@ import { createStore, applyMiddleware } from "redux";
 /* Allows browser to cache store based on our configuration */
 import { persistStore } from "redux-persist";
 import logger from "redux-logger";
-import thunk from "redux-thunk";
+import createSagaMiddleware from "redux-saga";
+
+import { fetchCollectionStart } from "./shop/shop.sagas";
 
 import rootReducer from "./root-reducer";
 
+/*Sagas used to handle side-effects such as asynchronous calls and impure functions */
+const sagaMiddleware = createSagaMiddleware();
+
 /* Configures all Middlewares as an array */
-const middlewares = [thunk];
+const middlewares = [sagaMiddleware];
 
 /* Applying following middlewares ONLY in development */
 if (process.env.NODE_ENV === "development") {
@@ -26,6 +31,9 @@ createStore accepts two inputs
   - applyMiddleware, a store enhancer that applies all our custom methods.
 */
 const store = createStore(rootReducer, applyMiddleware(...middlewares));
+
+/* Use saga middleware to run each individual saga */
+sagaMiddleware.run(fetchCollectionStart);
 
 /* Persisted version of store */
 const persistor = persistStore(store);
