@@ -94,6 +94,20 @@ export const convertCollectionsSnapshotToMap = collections => {
   }, {});
 };
 
+/* 
+Mimicking User from a Backend Database
+Resolves user and returns current user or null in a promise based pattern
+Handles errors with the reject call
+*/
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsuscribe = auth.onAuthStateChanged(userAuth => {
+      unsuscribe();
+      resolve(userAuth);
+    }, reject);
+  });
+};
+
 /* Configure Firebase App with Authentication and Database */
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();

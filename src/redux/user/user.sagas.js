@@ -7,7 +7,8 @@ import { signInSuccess, signInFailure } from "./user.actions";
 import {
   auth,
   googleProvider,
-  createUserProfileDocument
+  createUserProfileDocument,
+  getCurrentUser
 } from "../../firebase/firebase.utils";
 
 /* REUSABLE SAGA FOR SIGNIN ATTEMPTS */
@@ -49,7 +50,31 @@ export function* onEmailSignInStart() {
   yield takeLatest(UserActionTypes.EMAIL_SIGN_IN_START, signInWithEmail);
 }
 
+/* 
+CHECK USER IN SESSION
+- Gets the userAuth object from Firebase
+- Checks if a user has ever signed in, i.e. userAuth != null
+- Else gets user snapshot from userAuth
+*/
+export function* isUserAuthenticated() {
+  try {
+    const userAuth = yield getCurrentUser();
+    if (!userAuth) return;
+    yield getSnapshotFromUserAuth(userAuth);
+  } catch (error) {
+    yield put(signInFailure(error));
+  }
+}
+
+export function* onCheckUserSessiion() {
+  yield takeLatest(UserActionTypes.CHECK_USER_SESSION, isUserAuthenticated);
+}
+
 /* RUN ALL SAGAS SIMULTANEOUSLY */
 export function* userSagas() {
-  yield all([call(onGoogleSignInStart), call(onEmailSignInStart)]);
+  yield all([
+    call(onGoogleSignInStart),
+    call(onEmailSignInStart),
+    call(onCheckUserSessiion)
+  ]);
 }

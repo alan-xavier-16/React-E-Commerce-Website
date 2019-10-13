@@ -10,6 +10,7 @@ import Checkout from "./pages/checkout/Checkout.component";
 import Header from "./components/header/Header.component";
 
 import { selectCurrentUser } from "./redux/user/user.selectors";
+import { checkUserSession } from "./redux/user/user.actions";
 
 import "./App.css";
 
@@ -20,22 +21,8 @@ class App extends Component {
 
   /* On User Sign in or Sign up, gets user data from Firestore and sets the state of the application for this user */
   componentDidMount() {
-    // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-    //   if (userAuth) {
-    //     /* Gets userRefs object from firestore database */
-    //     const userRef = await createUserProfileDocument(userAuth);
-    //     /* Gets the user snapshot object to access the data */
-    //     userRef.onSnapshot(snapShot => {
-    //       setCurrentUser({
-    //         id: snapShot.id,
-    //         ...snapShot.data()
-    //       });
-    //     });
-    //   } else {
-    //     /* On Sign Out */
-    //     setCurrentUser(userAuth);
-    //   }
-    // });
+    const { checkUserSession } = this.props;
+    checkUserSession();
   }
 
   /* Clear subscription */
@@ -76,4 +63,11 @@ const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  checkUserSession: () => dispatch(checkUserSession())
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
