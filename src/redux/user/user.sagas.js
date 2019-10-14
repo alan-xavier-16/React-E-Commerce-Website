@@ -111,7 +111,7 @@ export function* onSignUpStart() {
 }
 
 /** SIGNIN AFTER SIGNUP */
-export function* signInAfterSignUp({ user, additionalData }) {
+export function* signInAfterSignUp({ payload: { user, additionalData } }) {
   yield getSnapshotFromUserAuth(user, additionalData);
 }
 
