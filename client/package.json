@@ -2,6 +2,7 @@
   "name": "template",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "chalk": "^2.4.2",
     "firebase": "^6.6.1",
