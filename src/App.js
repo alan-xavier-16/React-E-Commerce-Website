@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -14,47 +14,31 @@ import { checkUserSession } from "./redux/user/user.actions";
 
 import "./App.css";
 
-class App extends Component {
-  /* HANDLES AUTH CHANGES WITH FIREBASE */
-  /* Creates user subscription to app */
-  unsubscribeFromAuth = null;
-
+const App = ({ checkUserSession, currentUser }) => {
   /* On User Sign in or Sign up, gets user data from Firestore and sets the state of the application for this user */
-  componentDidMount() {
-    const { checkUserSession } = this.props;
+  useEffect(() => {
     checkUserSession();
-  }
+  }, [checkUserSession]);
 
-  /* Clear subscription */
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
+  return (
+    <div>
+      <Header />
+      <Switch>
+        <Route exact path="/" component={HomePage} />
+        <Route path="/shop" component={Shop} />
+        <Route exact path="/checkout" component={Checkout} />
 
-  render() {
-    return (
-      <div>
-        <Header />
-        <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route path="/shop" component={Shop} />
-          <Route exact path="/checkout" component={Checkout} />
-
-          <Route
-            exact
-            path="/signin"
-            render={() =>
-              this.props.currentUser ? (
-                <Redirect to="/" />
-              ) : (
-                <SignInAndSignOutPage />
-              )
-            }
-          />
-        </Switch>
-      </div>
-    );
-  }
-}
+        <Route
+          exact
+          path="/signin"
+          render={() =>
+            currentUser ? <Redirect to="/" /> : <SignInAndSignOutPage />
+          }
+        />
+      </Switch>
+    </div>
+  );
+};
 
 /*
 Returns a user object from the root reducer.
