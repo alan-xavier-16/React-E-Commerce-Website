@@ -7,6 +7,9 @@ const path = require("path");
 /* If in Development or Testing, require the 'dotenv' library to access environment variables */
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
+/* STRIPE SECRET KEY */
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 /* Instantiate Express */
 const app = express();
 
@@ -38,4 +41,21 @@ if (process.env.NODE_ENV === "production") {
 app.listen(port, error => {
   if (error) throw error;
   console.log(`Server running on port ${port}`);
+});
+
+/* STRIPE PAYMENT ROUTE */
+app.post("/payment", (req, res) => {
+  const body = {
+    source: req.body.token.id,
+    amount: req.body.amount,
+    currency: "usd"
+  };
+
+  stripe.charges.create(body, (stripeErr, stripeRes) => {
+    if (stripeErr) {
+      res.status(500).send({ error: StripeErr });
+    } else {
+      res.status(200).send({ success: stripeRes });
+    }
+  });
 });
